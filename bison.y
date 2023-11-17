@@ -7,7 +7,6 @@ extern char *yytext;
 extern int yyleng;
 extern int yylex(void);
 extern void yyerror(char*);
-int variable=0;
 int error_sintacticoLexico = 0;
 extern FILE *yyin;
 
