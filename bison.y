@@ -146,7 +146,7 @@ void colocar(char * id, RegTS * TS) {
      int i = 4;  
      //  
      while ( strcmp("$", TS[i].identifi) ) i++;   
-     if ( i < 999 ) { // cantidad de tokens posibles?   
+     if ( i < 999 ) { 
         strcpy( TS[i].identifi, id );   TS[i].t = 4;   strcpy(TS[++i].identifi, "$" );          
         } 
 } 
