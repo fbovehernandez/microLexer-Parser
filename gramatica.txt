@@ -1,0 +1,25 @@
+// Gramatica sintactica para micro
+
+objetivo: programa FDT 
+        ;
+programa: INICIO listaSentencias FIN 
+        ;
+listaSentencias: listaSentencias sentencia | sentencia
+        ;
+sentencia: identificador ASIGNACION expresion PYCOMA 
+        | LEER PARENIZQUIERDO listaIdentificadores PARENDERECHO PYCOMA
+        | ESCRIBIR PARENIZQUIERDO listaExpresiones PARENDERECHO PYCOMA
+        ;
+listaIdentificadores: identificador | listaIdentificadores COMA identificador 
+        ;
+listaExpresiones: listaExpresiones COMA expresion | expresion
+        ;
+expresion: expresion operadorAditivo primaria | primaria
+        ; 
+primaria: identificador 
+        | CONSTANTE 
+        | PARENIZQUIERDO expresion PARENDERECHO
+        ;
+operadorAditivo: SUMA | RESTA
+        ;
+identificador : ID <- Podria usar directo ID como terminal 
