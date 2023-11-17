@@ -2,27 +2,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h> 
-#include <math.h>
 
 extern char *yytext;
 extern int yyleng;
 extern int yylex(void);
 extern void yyerror(char*);
 int variable=0;
+int error_sintacticoLexico = 0;
 extern FILE *yyin;
 
 // Inicializacion funciones para semantica
-void max32Caracteres();
+void analizarID();
 int esMayorA32Caracteres(char *);
 
 #define TAMLEX 32+1 
+#define TAMTS 10+1
 
 typedef struct {
         char identifi[TAMLEX];
         int t; // Segun el codigo los toma que enteros (los primeros 3 pr)
 } RegTS;
 
-RegTS TS[10] = { {"inicio", 0}, {"fin", 1}, {"leer", 2}, {"escribir", 3}, {"$", 99} };  // El ID seria 4 -> Las otras son pr y el 99 supongo que es un caracter que usa para poder agregar despues el valor al final de la tabla. 
+RegTS TS[TAMTS] = { {"inicio", 0}, {"fin", 1}, {"leer", 2}, {"escribir", 3}, {"$", 99} }; 
 
 typedef struct{ 
         int clase;      
@@ -31,9 +32,10 @@ typedef struct{
 } REG_EXPRESION; 
 
 REG_EXPRESION procesarID(char *);
-void mostrarVector(RegTS* );
+void mostrarVector(RegTS*);
 void buffer(char *);
 void colocar(char * , RegTS * );
+int buscar(char *, RegTS *);
 
 // buffer = yylval.cadena
 %}
@@ -43,14 +45,15 @@ void colocar(char * , RegTS * );
    int num;
 } 
 
-%token ASIGNACION PYCOMA SUMA RESTA PARENIZQUIERDO PARENDERECHO COMA INICIO FIN LEER ESCRIBIR
+%token ASIGNACION PYCOMA SUMA RESTA PARENIZQUIERDO PARENDERECHO COMA INICIO FIN LEER ESCRIBIR FDT
 
 %token <cadena> ID
 %token <num> CONSTANTE
 %%
 
 // Gramatica sintactica para micro con algunas rutinas
-// Falta agregar el fdt? -> como token
+// objetivo: programa FDT {mostrarVector(TS);}
+//      ;
 programa: INICIO listaSentencias FIN {mostrarVector(TS);}
         ;
 listaSentencias: listaSentencias sentencia | sentencia
@@ -65,17 +68,18 @@ listaExpresiones: listaExpresiones COMA expresion | expresion
         ;
 expresion: expresion operadorAditivo primaria | primaria
         ; 
-primaria: identificador
+primaria: identificador 
+        | CONSTANTE 
         | PARENIZQUIERDO expresion PARENDERECHO
         ;
 operadorAditivo: SUMA | RESTA
         ;
-identificador : ID {procesarID($1);} {max32Caracteres($1);}
+identificador : ID {procesarID($1);} {analizarID($1);}
 %%
 
 int main() {
-  // Funca bien, yyin declara cual es la entrada de bison y con el extern File * yyin defino a yyin como un archivo, no se si ya esta definido por default en bison. 
-  FILE *archivo = fopen("archivo.txt", "r");
+  // yyin declara cual es la entrada de bison y con el extern File * yyin defino a yyin como un archivo. 
+  FILE *archivo = fopen("archivoDePruebas.txt", "r");
   yyin = archivo;
   yyparse();
   fclose(archivo);
@@ -84,8 +88,7 @@ int main() {
 
 REG_EXPRESION procesarID(char * unIdentif) {
   REG_EXPRESION reg; 
-  buffer(unIdentif); // yylval.cadena ?
-  // mostrarVector(TS);
+  buffer(unIdentif); // yylval.cadena
   // Aparte, retorna reg del ids que cargo si no estaba. 
   reg.clase = 4; 
   strcpy(reg.nombre, yylval.cadena); 
@@ -93,19 +96,34 @@ REG_EXPRESION procesarID(char * unIdentif) {
 }
 
 void mostrarVector(RegTS * TS) {
-    // 1000 primeros
-    for (int i = 0; i < 15; ++i) {
+  if(error_sintacticoLexico != 1) { 
+        for (int i = 0; i < TAMTS; ++i) {
         printf("%s ", TS[i].identifi);
-    }
+        }
+  }
+    
 }       
 
 void buffer(char *s) {
-        // No hay previa validacion de si ya esta en la tabla
-        colocar(s, TS);
+        if(!buscar(s,TS)) {
+            colocar(s, TS);  
+        }
 }
 
+int buscar(char *id, RegTS * TS) {
+    // Aca el codigo en c de ASDR hace una asignacion al token pero no le vi la funcionalidad para este caso
+    int i = 0;
+     while ( strcmp("$", TS[i].identifi) ) {   
+        if ( !strcmp(id, TS[i].identifi) )  {    
+               return 1;    
+        }   
+        i++;  
+        }  
+        return 0; 
+} 
+
 void colocar(char * id, RegTS * TS) {
-     int i = 4;  // Supongo que es valor numerico del ids
+     int i = 4;  
      //  
      while ( strcmp("$", TS[i].identifi) ) i++;   
      if ( i < 999 ) { // cantidad de tokens posibles?   
@@ -113,19 +131,19 @@ void colocar(char * id, RegTS * TS) {
         } 
 } 
 
-// Implementacion para ver como funcaba yylval
 void yyerror (char *s){
-  printf ("mi error es %s\n", s);
+  error_sintacticoLexico = 1;
+  printf ("el error fue: %s\n", s);
 }
 
-void max32Caracteres() {
+void analizarID() {
     if(esMayorA32Caracteres(yylval.cadena)){
-        yyerror("Error Semantico, el identificador tiene mas de 32 caracteres");
+        yyerror("Semantico, el identificador tiene mas de 32 caracteres");
     }            
 }
 
 int esMayorA32Caracteres(char *unIdentif){
-    if(strlen(unIdentif) > 4) return 1; //> 32, 4 para probar. 
+    if(strlen(unIdentif) > 32) return 1; 
     return 0;
 }
 
