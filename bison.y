@@ -52,8 +52,8 @@ int buscar(char *, RegTS *);
 %%
 
 // Gramatica sintactica para micro con algunas rutinas
-// objetivo: programa FDT {mostrarVector(TS);}
-//      ;
+// objetivo: programa FDT // {mostrarVector(TS);}
+//        ;
 programa: INICIO listaSentencias FIN {mostrarVector(TS);}
         ;
 listaSentencias: listaSentencias sentencia | sentencia
@@ -77,12 +77,12 @@ operadorAditivo: SUMA | RESTA
 identificador : ID {procesarID($1);} {analizarID($1);}
 %%
 
-int main() {
+int main(int argc, char *argv[]) {
+  char *nombreArchivo = argv[1];
   // yyin declara cual es la entrada de bison y con el extern File * yyin defino a yyin como un archivo. 
-  FILE *archivo = fopen("archivoDePruebas.txt", "r");
-  yyin = archivo;
+  yyin = fopen(nombreArchivo, "r");
   yyparse();
-  fclose(archivo);
+  fclose(yyin);
   return 0;
 }
 

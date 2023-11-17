@@ -24,7 +24,7 @@ constEntera {DIGITO}({DIGITO})*
 ")" {return PARENDERECHO;}
 "+" {return SUMA;}
 "-" {return RESTA;}
-"," {return COMA;} // <<EOF>> {printf("Termino exitosamente"); return FDT;}
+"," {return COMA;}  // <<EOF>> {printf("Termino exitosamente"); return FDT;}
 . {yyerror("Lexico");}
 
 %%
