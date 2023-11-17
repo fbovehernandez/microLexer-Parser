@@ -1,0 +1,3 @@
+1. Como puedo hacer que despues de un error sintactico siga evaluando? Ya que bison tira por defecto el sintax error. 
+2. Problemas con el <<EOF>>
+3. Como podria implementar la rutina semantica Leer en el parser si no tengo al identificador como Terminal, y no se lo puedo asignar al mismo porque es parte de la gramatica. 

@@ -79,7 +79,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 43 ".\\bison.y"
+#line 45 ".\\bison.y"
 
    char* cadena;
    int num;

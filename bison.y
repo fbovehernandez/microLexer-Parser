@@ -36,7 +36,9 @@ void mostrarVector(RegTS*);
 void buffer(char *);
 void colocar(char * , RegTS * );
 int buscar(char *, RegTS *);
-
+void Terminar();
+void Generar(char*, char*, char*, char*);
+void Leer(REG_EXPRESION);
 // buffer = yylval.cadena
 %}
 
@@ -54,15 +56,15 @@ int buscar(char *, RegTS *);
 // Gramatica sintactica para micro con algunas rutinas
 // objetivo: programa FDT // {mostrarVector(TS);}
 //        ;
-programa: INICIO listaSentencias FIN {mostrarVector(TS);}
+programa: INICIO listaSentencias FIN {mostrarVector(TS);} {Terminar();}
         ;
 listaSentencias: listaSentencias sentencia | sentencia
         ;
 sentencia: identificador ASIGNACION expresion PYCOMA 
-        | LEER PARENIZQUIERDO listaIdentificadores PARENDERECHO PYCOMA 
+        | LEER PARENIZQUIERDO listaIdentificadores PARENDERECHO PYCOMA
         | ESCRIBIR PARENIZQUIERDO listaExpresiones PARENDERECHO PYCOMA
         ;
-listaIdentificadores: listaIdentificadores COMA identificador | identificador
+listaIdentificadores: identificador /* {Leer($1);} */ | listaIdentificadores COMA identificador 
         ;
 listaExpresiones: listaExpresiones COMA expresion | expresion
         ;
@@ -86,6 +88,24 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
+/*
+void Leer(REG_EXPRESION id) {  
+    Generar("Read", id.nombre, "Entera", ""); 
+} 
+*/
+
+void Terminar() {  /* Genera la instruccion para terminar la ejecucion del programa */ 
+   printf("\n");
+   Generar("Detiene", "", "", ""); 
+} 
+
+// Co -> Codigo de operacion, a y b son opereandos y c donde se guarda el resultado. 
+
+void Generar(char * co, char * a, char * b, char * c) {  
+     /* Produce la salida de la instruccion para la MV por stdout */  
+     printf("%s %s%c%s%c%s\n", co, a, ',', b, ',', c); 
+} 
+
 REG_EXPRESION procesarID(char * unIdentif) {
   REG_EXPRESION reg; 
   buffer(unIdentif); // yylval.cadena
@@ -100,13 +120,14 @@ void mostrarVector(RegTS * TS) {
         for (int i = 0; i < TAMTS; ++i) {
         printf("%s ", TS[i].identifi);
         }
-  }
-    
+  }  
 }       
 
+// Entera es el unico tipo de dato de micro. 
 void buffer(char *s) {
         if(!buscar(s,TS)) {
             colocar(s, TS);  
+            Generar("Declara", s, "Entera", "");
         }
 }
 
@@ -134,11 +155,13 @@ void colocar(char * id, RegTS * TS) {
 void yyerror (char *s){
   error_sintacticoLexico = 1;
   printf ("el error fue: %s\n", s);
+  exit(1); // Sale y no sigue evaluando
 }
 
 void analizarID() {
     if(esMayorA32Caracteres(yylval.cadena)){
         yyerror("Semantico, el identificador tiene mas de 32 caracteres");
+        exit(1);
     }            
 }
 
