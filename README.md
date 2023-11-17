@@ -14,6 +14,7 @@ Los pasos que seguimos para la resolución del problema fueron:
    
 3) Crear rutinas semánticas:
 analizarID(): Verifica que la cantidad de caracteres no supere el máximo (32). Utilizando una función “esMayorA32Caracteres(char)”
+
 procesarID(char *): Cada vez que lea un identificador, llama a una función auxiliar buffer() que verifica que ese     
 identificador no esté en la tabla de símbolos, si lo está, no hace nada, y si no está, lo agrega, generando un registro (REG_EXPRESION) que retorna con el valor asociado(cadena) del identificador y su valor(tipo) que en este caso será 4, ya que los primeros 3 están reservados para palabras reservadas. 
 
