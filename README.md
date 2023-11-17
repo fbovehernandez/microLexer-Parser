@@ -13,6 +13,7 @@ Los pasos que seguimos para la resolución del problema fueron:
 2) Crear archivo bison que utiliza los tokens reconocidos por nuestro archivo flex, y verifique la gramática de micro, teniendo en cuenta que en este solo tenemos un tipo de valor que es el entero.
    
 3) Crear rutinas semánticas:
+   
 R1 -> analizarID(): Verifica que la cantidad de caracteres no supere el máximo (32). Utilizando una función “esMayorA32Caracteres(char)”
 
 R2 -> procesarID(char *): Cada vez que lea un identificador, llama a una función auxiliar buffer() que verifica que ese     
