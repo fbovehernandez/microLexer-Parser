@@ -1,1 +1,1 @@
-inicio variable:=ss2; fin
+inicio variable:=12; fin
