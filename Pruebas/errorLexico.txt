@@ -1,1 +1,1 @@
-
+inicio _variable:=ss2; fin
