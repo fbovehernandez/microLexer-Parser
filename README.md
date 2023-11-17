@@ -21,7 +21,9 @@ identificador no esté en la tabla de símbolos, si lo está, no hace nada, y si
 
 R3 -> mostrarVector(RegTS *): Recibe la Tabla de símbolos, y la muestra si no hubo previo error sintáctico/léxico/semántico.
 
-R4 -> enerar(char *co, char *a, char *b, char *c): La idea de esta rutina es hacer una pequeña simulación de una MV de Micro, que por algunas operaciones, vaya mostrando lo que hace. Por ejemplo : cuando se declara una variable identificador, genera la instrucción declara variable, Entera. En este caso, “Entera” es el único tipo que acepta Micro, “Declara” es el código de operación, a y b son operandos y c donde se almacena el resultado.
+R4 -> Generar(char *co, char *a, char *b, char *c): La idea de esta rutina es hacer una pequeña simulación de una MV de Micro, que por algunas operaciones, vaya mostrando lo que hace. Por ejemplo : cuando se declara una variable identificador, genera la instrucción declara variable, Entera. En este caso, “Entera” es el único tipo que acepta Micro, “Declara” es el código de operación, a y b son operandos y c donde se almacena el resultado.
+
+Y algunas funciones auxiliares que se usan dentro de estas. 
 
 ## Manual
 Para correr el programa se ejectura iniciar.sh o en su defecto las siguientes lineas
