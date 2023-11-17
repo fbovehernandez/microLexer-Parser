@@ -1,1 +1,0 @@
-En el caso del error lexico, muestra la tabla de todas formas, en los otros 2 casos, no la muestra. 
