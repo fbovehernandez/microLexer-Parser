@@ -3,6 +3,7 @@
 	#include <string.h>
 	#include <stdlib.h>
 	#include "y.tab.h"
+	int yyerror(char *);
 %}
 DIGITO [0-9]
 LETRA [a-zA-Z]
@@ -14,7 +15,7 @@ constEntera {DIGITO}({DIGITO})*
 "inicio" {return INICIO;}
 "leer" {return LEER;}
 "escribir" {return ESCRIBIR;}
-"fin" {return FIN;} // Si lo pongo mas abajo, por alguna razon no lo matchea
+"fin" {return FIN;} 
 ":=" {return ASIGNACION;}
 {constEntera} {yylval.num = atoi(yytext); return CONSTANTE;}
 {IDENTIFICADOR} {yylval.cadena = strdup(yytext); return ID;}
@@ -23,7 +24,7 @@ constEntera {DIGITO}({DIGITO})*
 ")" {return PARENDERECHO;}
 "+" {return SUMA;}
 "-" {return RESTA;}
-"," {return COMA;}
-. {printf("Error Lexico");}
+"," {return COMA;} // <<EOF>> {printf("Termino exitosamente"); return FDT;}
+. {yyerror("Lexico");}
 
 %%
