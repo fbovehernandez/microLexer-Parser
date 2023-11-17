@@ -1,1 +1,1 @@
-inicio variableeeeeeeeeeeeeeeeeeee:=ss2; fin
+inicio varrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr:=var; fin
