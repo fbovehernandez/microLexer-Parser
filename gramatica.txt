@@ -1,4 +1,4 @@
-// Gramatica sintactica para micro
+// Gramatica sintactica Micro
 
 objetivo: programa FDT 
         ;
